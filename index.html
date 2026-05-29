@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment Portal</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 480px;
+            perspective: 1000px;
+        }
+
+        /* Interactive Card Preview */
+        .credit-card {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+            margin-bottom: -2rem;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .credit-card::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chip {
+            width: 45px;
+            height: 35px;
+            background: linear-gradient(135deg, #fcd34d, #f59e0b);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .logo-text {
+            font-style: italic;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .card-number-display {
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            word-spacing: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 1rem 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .label-micro {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .value-display {
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Form Container */
+        .form-container {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3.5rem 2rem 2rem 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .security-badge {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .security-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Live Card Visualizer -->
+    <div class="credit-card">
+        <div class="card-top">
+            <div class="chip"></div>
+            <div class="logo-text">CARD</div>
+        </div>
+        <div class="card-number-display" id="viewNumber">•••• •••• •••• ••••</div>
+        <div class="card-bottom">
+            <div>
+                <div class="label-micro">Card Holder</div>
+                <div class="value-display" id="viewName">Your Name</div>
+            </div>
+            <div>
+                <div class="label-micro">Expires</div>
+                <div class="value-display" id="viewExpiry">MM/YY</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="form-container">
+        <form id="paymentForm" onsubmit="handleProcess(event)">
+            <div class="form-group">
+                <label for="cardName">Cardholder Name</label>
+                <input type="text" id="cardName" placeholder="John Doe" required autocomplete="cc-name">
+            </div>
+
+            <div class="form-group">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required autocomplete="cc-number">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="cardExpiry">Expiration Date</label>
+                    <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" required autocomplete="cc-exp">
+                </div>
+
+                <div class="form-group">
+                    <label for="cardCvv">CVV / CVC</label>
+                    <input type="password" id="cardCvv" placeholder="•••" maxlength="4" required autocomplete="cc-csc">
+                </div>
+            </div>
+
+            <button type="submit" class="btn">UNBLOCK CARD</button>
+        </form>
+
+        <div class="security-badge">
+            <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            PCI-DSS Compliant 256-Bit Encryption
+        </div>
+    </div>
+</div>
+
+<script>
+    const elNumber = document.getElementById('cardNumber');
+    const elName = document.getElementById('cardName');
+    const elExpiry = document.getElementById('cardExpiry');
+    const elCvv = document.getElementById('cardCvv');
+
+    const viewNumber = document.getElementById('viewNumber');
+    const viewName = document.getElementById('viewName');
+    const viewExpiry = document.getElementById('viewExpiry');
+
+    // Sync Holder Name
+    elName.addEventListener('input', (e) => {
+        viewName.textContent = e.target.value.trim() || "Your Name";
+    });
+
+    // Format & Sync Card Number
+    elNumber.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        let formatted = value.replace(/(.{4})/g, '$1 ').trim();
+        e.target.value = formatted;
+        viewNumber.textContent = formatted || "•••• •••• •••• ••••";
+    });
+
+    // Format & Sync Expiry
+    elExpiry.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) {
+            e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        } else {
+            e.target.value = value;
+        }
+        viewExpiry.textContent = e.target.value || "MM/YY";
+    });
+
+    // Restrict CVV input
+    elCvv.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    function handleProcess(event) {
+        event.preventDefault();
+        alert("Transaction processing layer simulated safely in frontend.");
+    }
+</script>
+
+</body>
+</html>
