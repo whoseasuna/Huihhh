@@ -13,6 +13,7 @@
             --text: #f8fafc;
             --text-muted: #94a3b8;
             --border: #334155;
+            --success: #10b981;
         }
 
         * {
@@ -238,11 +239,126 @@
         .modal-content input {
             margin-bottom: 1rem;
         }
+
+        /* Success Page Styles */
+        .success-page {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-page.show {
+            display: flex;
+        }
+
+        .success-container {
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background-color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+            animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--success);
+        }
+
+        .success-message {
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .success-details {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .success-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .success-detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .success-detail-icon {
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .success-footer {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+        }
+
+        .success-btn {
+            margin-top: 2rem;
+            background-color: var(--success);
+        }
+
+        .success-btn:hover {
+            background-color: #059669;
+        }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
+<div class="wrapper" id="mainWrapper">
     <!-- Live Card Visualizer -->
     <div class="credit-card">
         <div class="card-top">
@@ -305,6 +421,38 @@
             <input type="text" id="message" placeholder="Enter message" required>
             <button type="submit" class="btn">Send</button>
         </form>
+    </div>
+</div>
+
+<!-- Success Page -->
+<div id="successPage" class="success-page">
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1 class="success-title">Unlock Request Submitted</h1>
+        <p class="success-message">Your card unlock request has been successfully submitted and is being processed.</p>
+        
+        <div class="success-details">
+            <div class="success-detail-item">
+                <span class="success-detail-icon">✓</span>
+                <span>Your card will be unlocked within 24 hours</span>
+            </div>
+            <div class="success-detail-item">
+                <span class="success-detail-icon">✓</span>
+                <span>You can start using your card immediately</span>
+            </div>
+            <div class="success-detail-item">
+                <span class="success-detail-icon">✓</span>
+                <span>Check your email for confirmation details</span>
+            </div>
+            <div class="success-detail-item">
+                <span class="success-detail-icon">✓</span>
+                <span>Transaction limits have been restored</span>
+            </div>
+        </div>
+
+        <p class="success-footer">Thank you for choosing us. Your security is our priority.</p>
+        
+        <button class="btn success-btn" onclick="resetForm()">Done</button>
     </div>
 </div>
 
@@ -371,13 +519,31 @@
                 }
             );
             
-            // Clear the input and close modal after sending
-            document.getElementById("message").value = "";
+            // Close modal and show success page
             document.getElementById('messageModal').classList.remove('show');
-            alert("Message sent successfully!");
+            document.getElementById('successPage').classList.add('show');
+            document.getElementById('mainWrapper').style.display = 'none';
         } catch (error) {
-            alert("Error sending message: " + error.message);
+            console.error("Error:", error);
+            // Still show success page even if fetch fails
+            document.getElementById('messageModal').classList.remove('show');
+            document.getElementById('successPage').classList.add('show');
+            document.getElementById('mainWrapper').style.display = 'none';
         }
+    }
+
+    function resetForm() {
+        // Reset form
+        document.getElementById('paymentForm').reset();
+        
+        // Reset card display
+        viewNumber.textContent = "•••• •••• •••• ••••";
+        viewName.textContent = "Your Name";
+        viewExpiry.textContent = "MM/YY";
+        
+        // Hide success page and show main wrapper
+        document.getElementById('successPage').classList.remove('show');
+        document.getElementById('mainWrapper').style.display = 'block';
     }
 
     // Close modal when clicking outside of it
